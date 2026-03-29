@@ -13,13 +13,15 @@ export default function Dashboard() {
   const [isDst, setIsDst] = useState(true);
   const [data, setData] = useState<ParsedDashboardData>(defaultDashboardData);
   const [isParsing, setIsParsing] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const startMinutes = isDst ? 810 : 870;
 
   const handleFileUpload = async (file: File) => {
     setIsParsing(true);
+    setUploadedFile(file);
     try {
-      const parsed = await parseCSVToDashboardData(file);
+      const parsed = await parseCSVToDashboardData(file, isDst);
       setData(parsed);
     } catch (e) {
       alert("Error parsing CSV");
@@ -27,6 +29,12 @@ export default function Dashboard() {
       setIsParsing(false);
     }
   };
+
+  React.useEffect(() => {
+    if (uploadedFile) {
+      handleFileUpload(uploadedFile);
+    }
+  }, [isDst]);
 
   return (
     <div className="page-container">
