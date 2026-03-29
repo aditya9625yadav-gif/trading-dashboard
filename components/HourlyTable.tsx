@@ -2,29 +2,29 @@
 
 import React, { useState, useMemo } from "react";
 import { CheckCircle, TrendingUp, MinusCircle, AlertTriangle, BarChart2 } from "lucide-react";
-import { SLOTS, Session, Verdict } from "@/lib/mockData";
+import { Session, Verdict, SlotData } from "@/lib/mockData";
 
 const VTag: React.FC<{ v: Verdict }> = ({ v }) => {
-  const vColor = { best: "var(--accent-lime)", trade: "var(--accent-lime-dim)", marginal: "var(--text-muted)", avoid: "var(--status-red)" }[v];
-  const vBg = { best: "var(--accent-lime-fade)", trade: "rgba(157, 199, 0, 0.12)", marginal: "rgba(255, 255, 255, 0.05)", avoid: "var(--status-red-fade)" }[v];
+  const vColor = { best: "var(--accent-lime)", trade: "var(--accent-lime-dim)", marginal: "var(--text-muted)", avoid: "var(--status-red)" }[v] || "var(--text-main)";
+  const vBg = { best: "var(--accent-lime-fade)", trade: "rgba(157, 199, 0, 0.12)", marginal: "rgba(255, 255, 255, 0.05)", avoid: "var(--status-red-fade)" }[v] || "transparent";
   const ic = { best: <CheckCircle size={12} />, trade: <TrendingUp size={12} />, marginal: <MinusCircle size={12} />, avoid: <AlertTriangle size={12} /> };
   
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: vBg, color: vColor, fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "4px 10px", borderRadius: "99px", border: `1px solid ${vColor}30`, textTransform: "uppercase" }}>
-      {ic[v]} {v}
+      {ic[v] || <span/>} {v}
     </span>
   );
 };
 
-export default function HourlyTable() {
+export default function HourlyTable({ slots }: { slots: SlotData[] }) {
   const [sortWr, setSortWr] = useState(false);
   const [sess, setSess] = useState<Session | "ALL">("ALL");
 
   const rows = useMemo(() => {
-    let r = SLOTS.filter(d => sess === "ALL" || d.session === sess);
+    let r = slots.filter(d => sess === "ALL" || d.session === sess);
     if (sortWr) r = [...r].sort((a, b) => b.wr - a.wr);
     return r;
-  }, [sortWr, sess]);
+  }, [sortWr, sess, slots]);
 
   return (
     <div className="glass-card animate-fade-in stagger-5" style={{ padding: "24px" }}>
@@ -77,7 +77,7 @@ export default function HourlyTable() {
           </thead>
           <tbody>
             {rows.map((d) => {
-              const vColorStr = { best: "var(--accent-lime)", trade: "var(--accent-lime-dim)", marginal: "var(--text-muted)", avoid: "var(--status-red)" }[d.verdict];
+              const vColorStr = { best: "var(--accent-lime)", trade: "var(--accent-lime-dim)", marginal: "var(--text-muted)", avoid: "var(--status-red)" }[d.verdict] || "var(--text-main)";
               return (
                 <tr key={d.slot}>
                   <td><span style={{ color: "var(--text-main)", fontWeight: 700, fontSize: "13px" }}>{d.label}</span></td>

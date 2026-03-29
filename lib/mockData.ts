@@ -11,7 +11,7 @@ export interface SlotData {
 
 export interface DayData {
   day: string; tp: number; sl: number; be: number;
-  wr: number; filteredWr: number;
+  wr: number;
 }
 
 export const SLOTS: SlotData[] = [
@@ -41,11 +41,11 @@ export const SLOTS: SlotData[] = [
 ];
 
 export const DAYS: DayData[] = [
-  { day:"Mon", tp:82,  sl:159, be:48, wr:34.2, filteredWr:37.7 },
-  { day:"Tue", tp:72,  sl:122, be:38, wr:37.1, filteredWr:39.0 },
-  { day:"Wed", tp:82,  sl:116, be:26, wr:41.4, filteredWr:43.3 },
-  { day:"Thu", tp:92,  sl:130, be:41, wr:41.7, filteredWr:44.5 },
-  { day:"Fri", tp:81,  sl:126, be:24, wr:39.1, filteredWr:42.1 },
+  { day:"Mon", tp:82,  sl:159, be:48, wr:34.2 },
+  { day:"Tue", tp:72,  sl:122, be:38, wr:37.1 },
+  { day:"Wed", tp:82,  sl:116, be:26, wr:41.4 },
+  { day:"Thu", tp:92,  sl:130, be:41, wr:41.7 },
+  { day:"Fri", tp:81,  sl:126, be:24, wr:39.1 },
 ];
 
 export const MONTHLY: Record<number, number[]> = {
@@ -64,15 +64,23 @@ export const DONUT = [
   { name:"BE",  value:177, color:"var(--text-faint)" },
 ];
 
-export const SESSIONS = [
-  { name:"London",   tp:231, sl:372, be:78,  wr:38.3, filtered:44.0 },
-  { name:"New York", tp:180, sl:280, be:99,  wr:39.1, filtered:38.9 },
+export const SESSIONS: { name: Session; tp: number; sl: number; be: number; wr: number }[] = [
+  { name:"London",   tp:231, sl:372, be:78,  wr:38.3 },
+  { name:"New York", tp:180, sl:280, be:99,  wr:39.1 },
 ];
 
 export const KPI_DATA = [
   { label:"Total Trades",  value:"1,240",  sub:"Jan 2021–Mar 2026",     trend:"up" as const,   state:"neutral" as const },
   { label:"Base Win Rate", value:"38.7%",  sub:"All trades excl. BE",   trend:"flat" as const, state:"amber" as const },
-  { label:"DST Filtered",  value:"41.9%",  sub:"Remove HHSlots 6,7,19,22",trend:"up" as const, state:"lime" as const },
   { label:"Best Slot",     value:"55.3%",  sub:"S11 · London Hr 6",     trend:"up" as const,   state:"lime" as const },
   { label:"Worst Slot",    value:"21.9%",  sub:"S7 · London Hr 4",      trend:"down" as const, state:"red" as const },
 ];
+
+export const defaultDashboardData = {
+  SLOTS,
+  DAYS,
+  MONTHLY,
+  DONUT,
+  SESSIONS,
+  KPI_DATA
+};

@@ -1,14 +1,23 @@
 "use client";
 
-import React from "react";
-import { Search, Clock, Calendar, ChevronDown, Bell } from "lucide-react";
+import React, { useRef } from "react";
+import { Search, Clock, Calendar, ChevronDown, Bell, UploadCloud } from "lucide-react";
 
 interface HeaderProps {
   isDst: boolean;
   toggleDst: () => void;
+  onFileUpload: (file: File) => void;
 }
 
-export default function Header({ isDst, toggleDst }: HeaderProps) {
+export default function Header({ isDst, toggleDst, onFileUpload }: HeaderProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      onFileUpload(e.target.files[0]);
+    }
+  };
+
   return (
     <header className="glass-panel" style={{
       display: "flex",
@@ -19,11 +28,29 @@ export default function Header({ isDst, toggleDst }: HeaderProps) {
       borderRadius: "var(--radius-xl)"
     }}>
       <div className="animate-fade-in stagger-1">
-        <h1 className="h1" style={{ marginBottom: "4px" }}>XAUUSD Overview</h1>
-        <p className="text-sub">Backtest Strategy · 2021–2026 · 1,240 Total Trades</p>
+        <h1 className="h1" style={{ marginBottom: "4px" }}>Trading Dashboard</h1>
+        <p className="text-sub">Performance Analytics</p>
       </div>
 
       <div className="flex-center animate-fade-in stagger-2" style={{ gap: "16px" }}>
+        
+        {/* Upload Button */}
+        <input 
+          type="file" 
+          accept=".csv" 
+          ref={fileInputRef} 
+          style={{ display: "none" }} 
+          onChange={handleFileChange} 
+        />
+        <button 
+          className="btn btn-primary" 
+          onClick={() => fileInputRef.current?.click()}
+          style={{ display: "flex", alignItems: "center", gap: "8px" }}
+        >
+          <UploadCloud size={16} />
+          Upload Data
+        </button>
+
         {/* Search */}
         <div style={{
           display: "flex",
@@ -33,7 +60,7 @@ export default function Header({ isDst, toggleDst }: HeaderProps) {
           border: "1px solid var(--border-medium)",
           borderRadius: "var(--radius-lg)",
           padding: "10px 16px",
-          width: "240px",
+          width: "200px",
           transition: "border-color 0.3s"
         }}>
           <Search size={16} color="var(--text-muted)" />
@@ -51,13 +78,6 @@ export default function Header({ isDst, toggleDst }: HeaderProps) {
           />
         </div>
 
-        {/* Date / Filter */}
-        <button className="btn btn-ghost" style={{ display: "flex", alignItems: "center", gap: "8px", background: "var(--bg-primary)" }}>
-          <Calendar size={16} color="var(--text-muted)"/>
-          <span>Jan 21 – Mar 26</span>
-          <ChevronDown size={14} color="var(--text-muted)"/>
-        </button>
-
         {/* DST Toggle */}
         <button 
           onClick={toggleDst} 
@@ -72,16 +92,6 @@ export default function Header({ isDst, toggleDst }: HeaderProps) {
         >
           <Clock size={16} />
           DST {isDst ? "ON" : "OFF"}
-          <span style={{ 
-            fontSize: "10px", 
-            padding: "2px 8px", 
-            borderRadius: "6px", 
-            background: isDst ? "var(--accent-lime)" : "var(--bg-card-hover)", 
-            color: isDst ? "#000" : "var(--text-muted)", 
-            fontWeight: 800 
-          }}>
-            {isDst ? "13:30" : "14:30"}
-          </span>
         </button>
 
         {/* Notifications */}
@@ -98,17 +108,6 @@ export default function Header({ isDst, toggleDst }: HeaderProps) {
           }}>
             <Bell size={18} />
           </button>
-          <div style={{
-            position: "absolute",
-            top: "-2px",
-            right: "-2px",
-            width: "12px",
-            height: "12px",
-            borderRadius: "50%",
-            background: "var(--status-red)",
-            border: "3px solid var(--bg-card)",
-            boxShadow: "0 0 10px var(--status-red-fade)"
-          }} />
         </div>
       </div>
     </header>
