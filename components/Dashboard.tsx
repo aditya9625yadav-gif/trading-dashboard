@@ -30,19 +30,28 @@ export default function Dashboard() {
     }
   };
 
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
     if (uploadedFile) {
       handleFileUpload(uploadedFile);
     }
   }, [isDst]);
 
+  React.useEffect(() => {
+    const handleMove = (e: PointerEvent) => {
+      if (wrapperRef.current) {
+        wrapperRef.current.style.setProperty("--x", `${e.clientX}px`);
+        wrapperRef.current.style.setProperty("--y", `${e.clientY}px`);
+      }
+    };
+    window.addEventListener("pointermove", handleMove);
+    return () => window.removeEventListener("pointermove", handleMove);
+  }, []);
+
   return (
-    <div className="page-container">
-      <div className="aurora-container">
-        <div className="aurora"></div>
-        <div className="aurora pos-1"></div>
-        <div className="aurora pos-2"></div>
-      </div>
+    <div className="page-container" ref={wrapperRef}>
+      <div className="torch-glow" />
       <Sidebar />
       
       <main className="main-content">
