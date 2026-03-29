@@ -38,6 +38,11 @@ export default function Dashboard() {
 
   return (
     <div className="page-container">
+      <div className="aurora-container">
+        <div className="aurora"></div>
+        <div className="aurora pos-1"></div>
+        <div className="aurora pos-2"></div>
+      </div>
       <Sidebar />
       
       <main className="main-content">
